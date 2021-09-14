@@ -1,0 +1,69 @@
+### 枚举对象的属性
+
+在JS中枚举对象的属性一共有三种方法
+
+- `for in`: 会遍历对象中所有的可枚举属性（包括自有属性和继承属性）
+- `Object.keys()`: 会返回一个包括所有的可枚举的自有属性的名称组成的数组
+- `Object.getOwnProPertyNames()`: 会返回自有属性的名称（不管是不是可枚举的）
+
+#### 1. `for...in`会遍历对象中**所有可枚举的属性**（包括自有属性和继承属性）
+
+```js
+const obj = {
+    itemA: 'itemA',
+    itemB: 'itemB'
+}
+// 使用Object.create创建一个原型为obj的对象 （模拟继承来的属性）
+var newObj = Object.create(obj)
+newObj.newItemA = 'newItemA'
+newObj.newItewnB = 'newItemB'
+
+for(i in newObj){
+    console.log(i)
+}
+// newItemA
+// newItemB
+// itemA
+// itemB
+
+// 现在我们将其中的一个属性变为不可枚举属性
+Object.defineProperty(newObj,'newItemA',{
+    enumerable: false
+})
+
+for(i in newObj){
+    console.log(i)
+}
+// newItemB
+// itemA
+// itemB
+```
+
+### 补充
+
+如果不想让`for...in`枚举继承来的属性可以借助`object.prototype.hasOwnProperty()`
+
+```js
+// 接上例
+for(i in newobj){
+    if(newObj.hasOwnProperty(i)) console.log(i)
+}
+```
+
+#### 2.object.keys() : 会返回一个包括所有的可枚举的自有属性的名称组成的数组
+
+```js
+// 接上例
+const result = Object.keys(newObj)
+console.log(result) // ["newItemB"]
+```
+
+#### 3.`Object.getOwnPropertyNames()`会返回自有属性的名称（不管是不是可枚举的）
+
+```js
+// 接上例
+const result = Object.keys(newObj)
+
+console.log(result) // ['newItemA','newItemB']
+```
+
